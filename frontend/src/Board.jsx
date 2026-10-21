@@ -3,6 +3,7 @@ import { COLORS, START, SAFE, HEX, LIGHT, DARK, TRACK, HOME, BASES, QUADRANTS, p
 
 export default function Board({ state, shown, myIndex, busy, onPawn }) {
   const canPlay = state.status === "playing" && state.turn === myIndex && state.dice !== null && !busy;
+  const fx = document.documentElement.classList.contains("lite") ? undefined : "url(#glow)";
   const turnColor = state.status === "playing" ? state.players[state.turn].color : null;
 
   // Positions affichées, avec léger décalage quand plusieurs pions partagent une case
@@ -48,7 +49,7 @@ export default function Board({ state, shown, myIndex, busy, onPawn }) {
           <g key={ci}>
             <rect x={x + 0.1} y={y + 0.1} width="5.8" height="5.8" rx="0.6" fill={HEX[c]} fillOpacity="0.12"
               stroke={HEX[c]} strokeOpacity={turnColor === c ? 1 : 0.5} strokeWidth="0.08"
-              className={turnColor === c ? "quad turn" : "quad"} filter="url(#glow)" />
+              className={turnColor === c ? "quad turn" : "quad"} filter={fx} />
             {BASES[ci].map(([bx, by], k) => (
               <circle key={k} cx={bx} cy={by} r="0.55" fill="#060c24" stroke={HEX[c]} strokeOpacity="0.45" strokeWidth="0.05" />
             ))}
@@ -75,7 +76,7 @@ export default function Board({ state, shown, myIndex, busy, onPawn }) {
           fill={HEX[COLORS[ci]]} fillOpacity="0.5" stroke={HEX[COLORS[ci]]} strokeWidth="0.04" />
       )))}
 
-      <g filter="url(#glow)" opacity="0.92">
+      <g filter={fx} opacity="0.92">
         <polygon points="6,6 7.5,7.5 6,9" fill={HEX.red} />
         <polygon points="6,6 9,6 7.5,7.5" fill={HEX.green} />
         <polygon points="9,6 9,9 7.5,7.5" fill={HEX.yellow} />
@@ -92,7 +93,7 @@ export default function Board({ state, shown, myIndex, busy, onPawn }) {
             <ellipse cy="0.3" rx="0.3" ry="0.12" fill="#000" opacity="0.5" />
             <g className="hop">
               {clickable && <circle r="0.56" fill="none" stroke="#fff" strokeWidth="0.06" strokeDasharray="0.2 0.14" className="ring" />}
-              <circle r={0.36 * (p.s || 1)} fill={`url(#orb-${pl.color})`} stroke={LIGHT[pl.color]} strokeWidth="0.05" filter="url(#glow)" />
+              <circle r={0.36 * (p.s || 1)} fill={`url(#orb-${pl.color})`} stroke={LIGHT[pl.color]} strokeWidth="0.05" filter={fx} />
               <ellipse cx="-0.1" cy="-0.14" rx="0.1" ry="0.06" fill="#fff" opacity="0.7" />
             </g>
           </g>

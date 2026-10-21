@@ -39,6 +39,20 @@ export default function Game({ session, matchId, onLeave }) {
 }
 
 function Table({ state, me, send, onLeave }) {
+  const lite = document.documentElement.classList.contains("lite");
+  const wrapRef = useRef(null);
+  const [bw, setBw] = useState(340);
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return undefined;
+    const measure = () => setBw(el.clientWidth || 340);
+    measure();
+    if (typeof ResizeObserver === "undefined") return undefined;
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const dieSize = Math.min(bw * 0.18, Math.max(bw * 0.105, 54));   // jamais plus petit que 54 px
   const { shown, busy } = useAnimatedPawns(state.pawns);
   const myIndex = state.players.findIndex((p) => p.id === me);
   const current = state.players[state.turn];
@@ -61,10 +75,11 @@ function Table({ state, me, send, onLeave }) {
   return (
     <main className="game">
       <section className="stage">
-        <div className="board-wrap">
+        <div className="board-wrap" ref={wrapRef}>
           <Board state={state} shown={shown} myIndex={myIndex} busy={busy}
             onPawn={(k) => send({ action: "move", pawn: k })} />
-          <Die last={state.last} color={dieColor} canRoll={canRoll} onRoll={() => send({ action: "roll" })} />
+          <Die last={state.last} color={dieColor} canRoll={canRoll} size={dieSize} lite={lite}
+            onRoll={() => send({ action: "roll" })} />
         </div>
         <p className="status" style={{ "--c": dieColor }} aria-live="polite">{hint}</p>
       </section>

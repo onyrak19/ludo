@@ -256,3 +256,29 @@ td { padding: .55rem .5rem; border-top: 1px solid rgba(70,190,255,.14); vertical
 @media (prefers-reduced-motion: reduce) {
   body::before, .panel::before, .primary::after { animation: none !important; }
 }
+
+/* =====================================================================
+   v4 : dé fiable sur téléphone + mode allégé (classe .lite sur <html>)
+   ===================================================================== */
+.board-wrap { container-type: normal; }            /* plus d'unités cqw : taille du dé fixée en pixels par React */
+.die-slot { width: var(--s); height: var(--s); }
+.die-hit { position: absolute; inset: -22%; z-index: 3; padding: 0; border: 0; border-radius: 50%; background: transparent;
+  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.die-hit:disabled { pointer-events: none; }        /* ne bloque jamais les pions sous le dé */
+.die-hit:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+.flatdie { width: 100%; height: 100%; display: grid; grid: repeat(3, 1fr) / repeat(3, 1fr); padding: 15%; border-radius: 22%;
+  background: linear-gradient(145deg, #f7fdff, #a9c8e6); box-shadow: 0 0 0 2px var(--c), 0 3px 10px rgba(0, 0, 0, .55); }
+.flatdie i { place-self: center; width: 80%; aspect-ratio: 1; border-radius: 50%; background: #0a1230; }
+.flatdie.rolling { animation: tumble .5s linear infinite; }
+@keyframes tumble { 0% { transform: rotate(0) scale(1); } 50% { transform: rotate(180deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1); } }
+
+.lite body::before, .lite body::after { display: none; }                      /* aurore et scanlines */
+.lite .panel { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(12, 20, 56, .95); box-shadow: none; }
+.lite .panel::before, .lite .quad.turn, .lite .die-slot.ready::before, .lite .primary::after, .lite .dots i { animation: none; }
+.lite .primary::after { display: none; }
+.lite .primary, .lite .balance, .lite .size.on, .lite .chip.on, .lite .status, .lite .players li.active { box-shadow: none; }
+.lite .board { box-shadow: 0 0 0 1px rgba(34, 225, 255, .4), 0 8px 20px #000a; }
+.lite .die-slot::before { box-shadow: none; }
+.lite h2, .lite .logo { text-shadow: none; filter: none; }
+@media (prefers-reduced-motion: reduce) { .flatdie.rolling { animation: none; } }
